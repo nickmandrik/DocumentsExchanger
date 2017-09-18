@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd
+       http://www.springframework.org/schema/websocket
+       http://www.springframework.org/schema/websocket/spring-websocket.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd"
+>
+
+
+    <context:component-scan base-package="fortegroup.internship.mandrik.exchanger.web.controller" />
+    <mvc:annotation-driven />
+    <mvc:resources mapping="/**" location="/pages/" />
+
+    <websocket:message-broker application-destination-prefix="/exchanger">
+        <websocket:stomp-endpoint path="/socket" >
+            <websocket:sockjs/>
+        </websocket:stomp-endpoint>
+        <websocket:simple-broker prefix="/queue/, /topic/"/>
+    </websocket:message-broker>
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/document_assignment" />
+        <property name="username" value="root" />
+        <property name="password" value="11121533" />
+    </bean>
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="annotatedClasses">
+            <list>
+                <value>fortegroup.internship.mandrik.exchanger.model.User</value>
+                <value>fortegroup.internship.mandrik.exchanger.model.Document</value>
+                <value>fortegroup.internship.mandrik.exchanger.model.Assignment</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="message"/>
+    </bean>
+
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+
+    <bean id="userDao" class="fortegroup.internship.mandrik.exchanger.dao.UserDaoImpl"/>
+    <bean id="documentDao" class="fortegroup.internship.mandrik.exchanger.dao.DocumentDaoImpl"/>
+    <bean id="assignmentDao" class="fortegroup.internship.mandrik.exchanger.dao.AssignmentDaoImpl"/>
+
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/pages/" />
+        <property name="suffix" value=".html" />
+    </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="100000000"/>
+    </bean>
+
+
+
+
+    <bean id="authenticationManager" class="fortegroup.internship.mandrik.exchanger.web.auth.AuthManager"/>
+    <bean id="authSuccessHandler" class="fortegroup.internship.mandrik.exchanger.web.auth.handler.AuthSuccessHandler"/>
+    <bean id="authFailureHandler" class="fortegroup.internship.mandrik.exchanger.web.auth.handler.AuthFailureHandler"/>
+
+
+    <bean id="authenticationFilter" class="fortegroup.internship.mandrik.exchanger.web.auth.filter.AuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="authenticationSuccessHandler" ref="authSuccessHandler"/>
+        <property name="authenticationFailureHandler" ref="authFailureHandler"/>
+        <property name="filterProcessesUrl" value="/exchanger/login_user"/>
+        <property name="usernameParameter" value="username"/>
+        <property name="passwordParameter" value="password"/>
+    </bean>
+
+
+    <!--<bean id="srfTokenService" class="fortegroup.internship.mandrik.exchanger.web.service.SrfTokenService"/>
+    <property name="headerName" value="X-CSRF-TOKEN" />
+
+    <bean id="csrfTokenRepository" class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository">
+        <property name="headerName" value="X-XSRF-TOKEN" />
+        <property name="sessionAttributeName" value="_csrf" />
+    </bean>
+    -->
+
+
+    <bean id="preAuthenticatedProcessingFilterEntryPoint"
+          class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
+
+    <security:http use-expressions="true" auto-config="false" entry-point-ref="preAuthenticatedProcessingFilterEntryPoint"
+                   authentication-manager-ref="authenticationManager">
+        <security:intercept-url pattern="/exchanger/login_user" access="permitAll()"/>
+        <security:intercept-url pattern="/exchanger/login" access="permitAll()"/>
+        <security:intercept-url pattern="/" access="permitAll"/>
+
+        <security:intercept-url pattern="/exchanger/logout" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/exchanger/client" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/exchanger/doclist" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/exchanger/download/*" access="hasRole('ROLE_USER')"/>
+
+        <security:intercept-url pattern="/exchanger/admin" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/exchanger/user/*" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/exchanger/documents/*" access="hasRole('ROLE_ADMIN')"/>
+
+        <security:custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
+
+        <security:anonymous username="guest" granted-authority="ROLE_ANONYMOUS"/>
+
+        <security:csrf disabled="true"/>
+
+<!--        <security:custom-filter before="FORM_LOGIN_FILTER" ref="authenticationFilter"/>
+        <security:form-login
+                login-processing-url="/exchanger/login_user"
+                username-parameter="username"
+                password-parameter="password"
+                authentication-failure-handler-ref="authFailureHandler"
+                authentication-success-handler-ref="authSuccessHandler"
+                />-->
+
+
+        <security:logout invalidate-session="false"
+                         logout-success-url="/exchanger/login"
+                         logout-url="/exchanger/logout"
+                         delete-cookies="JSESSIONID"/>
+
+        <!--<security:remember-me data-source-ref="dataSource" key="secret_remember_me" />-->
+
+        <!--<security:csrf/>-->
+        <!--<security:http-basic/>-->
+
+    </security:http>
+
+</beans>

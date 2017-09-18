@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exchanger documents</title>
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+    <link rel="stylesheet" type="text/css" href="../assets/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/libs/bootstrap/css/bootstrap-theme.css">
+
+    <link rel="stylesheet" href="/pages/util/css/folders.css">
+
+    <link rel="import" href="/pages/util/header.html">
+</head>
+
+<body>
+
+
+    <script>
+        var link = document.querySelector('link[rel=import]');
+        var content = link.import.querySelector('#infoUser');
+        document.body.appendChild(content.cloneNode(true));
+    </script>
+
+    <div id="userContentContainer" style="margin-top: 65px">
+        <div class="container noselect">
+            <div id="heading" class="masthead">
+                <h3 class="muted">Documents status</h3>
+            </div>
+
+            <h3>
+                <p></p>
+            </h3>
+
+            <div class="container">
+                <div id="panel panel-default">
+                    <table class="table table-striped">
+                        <thead class="muted">
+                            <tr>
+                                <td style="width: 25%">Total count of the documents:</td>
+                                <td data-bind="text: documents().total" class="number-center"></td>
+                                <td></td>
+                            </tr>
+                            <tr></tr>
+                        </thead>
+                        <thead style="margin-top: 20px">
+                        <tr>
+                            <th class="text-center" style="width: 10%">Document ID</th>
+                            <th class="text-center" style="width: 30%">Document Name</th>
+                            <th class="text-center" style="width: 60%">Document Path</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody data-bind="foreach: documents().rows">
+                        <tr data-bind="click: $root.downloadDocument">
+                            <td data-bind="text: id" class="text-center" style="width: 10%"></td>
+                            <td data-bind="text: name" class="text-center" style="width: 30%"></td>
+                            <td data-bind="text: path" class="text-center" style="width: 60%"></td>
+                        </tr>
+                        </tbody>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+<!--
+    <button data-bind="click: refreshDocuments">Refresh</button>-->
+
+    </div>
+
+    <script src="../assets/libs/sockjs/sockjs-0.3.4.js"></script>
+    <script src="../assets/libs/stomp/stomp.js"></script>
+    <script src="../assets/libs/knockout/knockout-3.4.2.js"></script>
+    <script src="../assets/libs/jquery/js/jquery-3.2.1.min.js"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script src="../assets/libs/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../assets/libs/filesaver/FileSaver.min.js"> </script>
+
+    <!-- application -->
+    <script src="/pages/util/js/client.js"></script>
+
+
+    <noscript>
+        <h2 style="color: #ff0000">
+            Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable
+            Javascript and reload this page!
+        </h2>
+    </noscript>
+</body>
+</html>

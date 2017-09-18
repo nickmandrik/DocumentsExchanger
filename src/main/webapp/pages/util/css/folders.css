@@ -1,0 +1,180 @@
+.folders {
+    background-color: #bbb;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 7px;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #d6d6d6), color-stop(0.4, #c0c0c0), color-stop(1, #a4a4a4));
+    margin: 10px 0 16px 0;
+    font-size: 0px;
+}
+
+.folders li:hover {
+    background-color: #ddd;
+}
+.folders li:first-child {
+    border-right: none;
+    border-radius: 7px 0 0 7px;
+}
+.folders li {
+    font-size: 14px;
+    font-weight: bold;
+    isplay: inline;
+    padding: 0.5em 1.5em;
+    cursor: pointer;
+    color: #444;
+    text-shadow: #f7f7f7 0 1px 1px;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #888;
+}
+.folders li {
+    *display: inline !important;
+} /* IE7 only */
+.folders .selected {
+    background-color: #444 !important;
+    color: white;
+    text-shadow:none;
+    border-right-color: #aaa;
+    border-left: none;
+    box-shadow:inset 1px 2px 6px #070707;
+}
+
+
+
+
+
+
+
+.inner-table {
+    width: 100%;
+    table-layout:fixed;
+    border-spacing: 0;
+}
+.inner-table thead {
+    background-color: #bbb;
+    font-weight: bold;
+    color: #444;
+    text-shadow: #f7f7f7 0 1px 1px;
+}
+.inner-table tbody tr:hover {
+    cursor: pointer;
+    background-color: #68c !important;
+    color: White;
+}
+.inner-table th, .inner-table td {
+    text-align:center;
+    padding: 0.4em 0.3em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.inner-table th {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #888;
+    padding: 0.4em 0 0.3em 0.7em;
+}
+.inner-table th:nth-child(1), .inner-table td:nth-child(1) {
+    width: 10%;
+}
+.inner-table th:nth-child(2), .inner-table td:nth-child(2) {
+    width: 30%;
+}
+.inner-table th:nth-child(3), .inner-table td:nth-child(3) {
+    width: 60%;
+}
+.inner-table th:last-child {
+    border-right: none
+}
+.inner-table tr:nth-child(even) {
+    background-color: #EEE;
+}
+
+
+/*
+.inner-table .tableSection {
+    display: table;
+    width: 100%;
+}
+.inner-table .tableSection thead, table.tableSection tbody {
+    float: right;
+    width: 100%;
+}
+.inner-table .tableSection tbody {
+    overflow: auto;
+    height: 150px;
+}
+.inner-table .tableSection tr {
+    width: 100%;
+    display: table;
+    text-align: left;
+}
+.inner-table .tableSection th, table.tableSection td {
+    width: 33%;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+.viewUser .userInfo {
+    background-color: #dae0e8;
+    padding: 1em 1em 0.5em 1.25em;
+    border-radius: 1em;
+}
+.viewUser .userInfo .headerLogin {
+    font-size: 130%;
+    font-weight: bold;
+}
+.viewUser .userInfo label {
+    color: #777;
+    font-weight: bold;
+    min-width: 2.75em;
+    text-align:right;
+    display: inline-block;
+}
+.viewUser .message {
+    padding: 0 1.25em;
+}
+
+
+
+
+
+
+
+
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+
+
+
+
+.dataTables_wrapper {
+    float: left;
+    width: 40%;
+    clear: none
+}
+table.dataTable tbody tr.selected {
+    background-color: #b0bed9;
+}
+table.dataTable.display tbody tr.odd.selected > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.selected > .sorting_1 {
+    background-color: #a6b3cd;
+}
+table.dataTable.display tbody tr:hover.selected > .sorting_1, table.dataTable.display tbody tr.odd:hover.selected > .sorting_1, table.dataTable.display tbody tr.even:hover.selected > .sorting_1, table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_1, table.dataTable.order-column.hover tbody tr.odd:hover.selected > .sorting_1, table.dataTable.order-column.hover tbody tr.even:hover.selected > .sorting_1 {
+    background-color: #a1aec7;
+}

@@ -1,0 +1,28 @@
+<nav class="navbar navbar-default navbar-fixed-top" id="infoUser">
+    <div class="container" style="display: none;" data-bind="visible: true">
+        <!--<ul class="folders" data-bind="foreach: folders">
+            <li class="btn" data-bind="text: $data,
+                   css: { selected: $data == $root.chosenFolderId() },
+                   click: $root.goToFolder">
+            </li>
+        </ul>-->
+        <ul class="nav navbar-nav navbar-right" style="display: inline" data-bind="visible: username !== null">
+            <li>
+                <a>
+                    <span class="glyphicon glyphicon-user"></span> 
+                    <strong class="text-info" data-bind="text: username"></strong>
+                </a>
+            </li>
+            <li>
+                <p>
+                <form action="/exchanger/logout" method="post"
+                      class="form-signout" role="form">
+                    <div class="form-group">
+                        <input name="submit" type="submit" value="Logout" class="btn btn-danger"/>
+                    </div>
+                </form>
+                </p>
+            </li>
+        </ul>
+    </div>
+</nav>

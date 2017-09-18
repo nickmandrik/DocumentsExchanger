@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Documents exchanger</title>
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+    <link rel="stylesheet" type="text/css" href="../assets/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/libs/bootstrap/css/bootstrap-theme.css">
+
+    <link rel="stylesheet" href="/pages/util/css/folders.css">
+    <link rel="stylesheet" type="text/css"
+          href="//cdn.datatables.net/plug-ins/a5734b29083/integration/bootstrap/3/dataTables.bootstrap.css">
+    <link rel="stylehseet" type="text/css" href="//cdn.datatables.net/responsive/1.0.1/css/dataTables.responsive.css">
+
+    <link rel="import" href="/pages/util/header.html">
+
+</head>
+
+<body>
+
+    <script>
+        var link = document.querySelector('link[rel=import]');
+        var content = link.import.querySelector('#infoUser');
+        document.body.appendChild(content.cloneNode(true));
+    </script>
+
+
+    <div id="userContentContainer" style="margin-top: 90px">
+        <div class="container noselect" style="display: none;" data-bind="visible: true">
+
+            <!-- Headers to swap between documents and users -->
+            <ul class="folders" data-bind="foreach: folders">
+                <li class="btn" data-bind="text: $data,
+                       css: { selected: $data == $root.chosenFolderId() },
+                       click: $root.goToFolder">
+                </li>
+            </ul>
+
+
+            <!-- Table used to represent user list -->
+
+            <div data-bind="visible: $root.chosenOperation() === 'Users'">
+                <span class="pull-left">
+                    <button class="btn btn-primary" style="width: 200px" data-bind="click: $root.choseAddUser">
+                        Add user
+                    </button>
+                </span>
+
+                <span class="pull-right">
+                    <form class="form-search">
+                        <input id="findUserInput" class="input-medium search-query">
+                        <button class="btn" data-bind="click: $root.findUsers">Find</button>
+                    </form>
+                </span>
+
+                <div style="height: 50px"></div>
+
+                <table class="inner-table">
+                    <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                    </tr>
+                    </thead>
+
+                    <tbody data-bind="foreach: usersData">
+                        <tr data-bind="click: $root.goToUser">
+                            <td class="text-center" data-bind="text: role"></td>
+                            <td class="text-center" data-bind="text: login"></td>
+                            <td class="text-center" data-bind="text: password"></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+
+            <!-- Info about one user -->
+
+            <div data-bind="visible: $root.chosenOperation() === 'ChosenUser' || $root.chosenOperation() === 'EditUser'">
+                <!-- Chosen User -->
+                <div class="viewUser" data-bind="with: chosenUserData">
+                    <div class="userInfo">
+                        <span class="headerLogin">Info about </span>
+                        <span class="headerLogin" data-bind="text: login"></span>
+                        <p>
+                        </p>
+                        <p>
+                            <label>Password</label>
+                            <span data-bind="text: password"></span>
+                        </p>
+                        <p>
+                            <label>Role</label>:
+                            <span data-bind="text: role"></span>
+                        </p>
+                    </div>
+                    <!--<p class="message" data-bind="html: messageContent" />-->
+                </div>
+
+            </div>
+
+            <div data-bind="visible: $root.chosenOperation() === 'ChosenUser'">
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-md-12">
+                        <h1>
+                            <span class="pull-right">
+                                <div class="btn btn-default"
+                                     data-bind="click: $root.choseAssignDocumentsToUser">Assign documents to user</div>
+                                <div class="btn btn-default" style="width: 100px"
+                                     data-bind="click: $root.choseEditUser">Edit</div>
+
+                                <div class="btn btn-danger" style="width: 100px"
+                                     data-bind="click: $root.deleteUser">Delete</div>
+                            </span>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Add user -->
+
+            <div data-bind="visible: $root.chosenOperation() === 'AddUser'">
+                <div class="form-group">
+                    <label for="addUserRole">Role:</label>
+                    <select id="addUserRole">
+                        <option>Client</option>
+                        <option>Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addUserName">Username:</label>
+                    <input id="addUserName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="addUserPassword">Password:</label>
+                    <input id="addUserPassword" class="form-control">
+                </div>
+
+                <div class="btn btn-primary" style="width: 200px"
+                     data-bind="click: $root.addUser">Add</div>
+
+            </div>
+
+
+            <!-- Edit user -->
+
+            <div class="row" data-bind="visible: $root.chosenOperation() === 'EditUser'">
+
+                <div style="width: 50%; margin: 0 auto">
+                    <div class="col-5">
+                        <div style="margin-top: 30px">
+                            <div id="heading" class="masthead">
+                                <h3 class="text-center">Edit user</h3>
+                            </div>
+                        </div>
+                        <div data-bind="with: chosenUserData" style="margin-top: 20px">
+                            <div class="form-group">
+                                <label for="editUserRole">Role:</label>
+                                <select id="editUserRole">
+                                    <option>Client</option>
+                                    <option>Admin</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editUserName">Username:</label>
+                                <input id="editUserName" class="form-control" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="editUserPassword">Password:</label>
+                                <input id="editUserPassword" class="form-control">
+                            </div>
+
+                            <div class="btn btn-primary center-block" style="width: 200px"
+                                 data-bind="click: $root.editUser">Edit</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Assign documents to user -->
+
+            <div data-bind="visible: $root.chosenOperation() === 'AssignDocuments'">
+                <div style="height: 20px"></div>
+                <h3 style="text-align: left">Assign documents to user</h3>
+                <div style="height: 10px"></div>
+                <table class="inner-table" width="100%"
+                       id="assignDocumentsToUserTable">
+                    <thead>
+                    <tr>
+                        <th style="width: 10%">Is assign</th>
+                        <th style="width: 10%">ID</th>
+                        <th style="width: 30%">Name</th>
+                        <th style="width: 50%">Path</th>
+                    </tr>
+                    </thead>
+
+                    <tbody data-bind="foreach: documentsData">
+                        <tr data-bind="click: $root.changeAssignment">
+                            <td> <span class='glyphicon glyphicon-remove'></span></td>
+                            <td data-bind="text: id"></td>
+                            <td data-bind="text: name"></td>
+                            <td data-bind="text: path"></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <!--<button id="RightMoveAssignDoc">right &raquo;</button>
+                <button id="LeftMoveAssignDoc">&laquo; left</button>
+
+                <table class=inner-table style="float:right; width: 45%"
+                       id="assignDocumentsTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Path</th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: documentsData">
+                    <tr>
+                        <td class="text-center" data-bind="text: id"></td>
+                        <td class="text-center" data-bind="text: name"></td>
+                        <td class="text-center" data-bind="text: path"></td>
+                    </tr>
+                    </tbody>
+                </table>-->
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- Documents list -->
+
+            <div data-bind="visible: $root.chosenOperation() === 'Documents'">
+                <span class="pull-left">
+                    <div class="btn btn-primary" style="width: 200px" data-bind="click: $root.choseUploadDoc">
+                        <span class="glyphicon glyphicon-plus"></span>  Document
+                    </div>
+                </span>
+
+                <span class="pull-right">
+                    <form class="form-search">
+                        <input id="findDocumentInput" class="input-medium search-query">
+                        <button class="btn" data-bind="click: $root.findDocuments">Find</button>
+                    </form>
+                </span>
+
+
+                <div style="height: 50px"></div>
+                <table class="inner-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Path</th>
+                    </tr>
+                    </thead>
+
+                    <tbody data-bind="foreach: documentsData">
+                    <tr data-bind="click: $root.goToDocument">
+                        <td class="text-center" data-bind="text: id"></td>
+                        <td class="text-center" data-bind="text: name"></td>
+                        <td class="text-center" data-bind="text: path"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+
+
+            <!-- Upload the document -->
+
+
+            <div id="uploadDocBlock" data-bind="visible: $root.chosenOperation() === 'UploadDoc'">
+                <form id="formUploadDocument">
+                    <input id="inputDocument" type="file" data-btnClass="btn-primary"
+                           class="filestyle" data-buttonBefore="true">
+                </form>
+
+                <h3><p></p></h3>
+
+                <div class="form-group">
+                    <label for="pathDocUpload">Path to upload:</label>
+                    <input id="pathDocUpload" class="form-control" placeholder="by default it equals '/'">
+                </div>
+
+                <div id="uploadButton" class="btn btn-success" style="width: 200px" data-bind="click: $root.uploadDocument">
+                    <span class="glyphicon glyphicon-upload"></span>
+                    Upload
+                </div>
+            </div>
+
+
+
+
+
+            <!-- Info about one document -->
+
+            <div data-bind="visible: $root.chosenOperation() === 'ChosenDocument'
+                        || $root.chosenOperation() === 'EditDoc'">
+                <div class="viewUser" data-bind="with: chosenDocumentData">
+                    <div class="userInfo">
+                        <span class="headerLogin">Info about document #</span>
+                        <span class="headerLogin" data-bind="text: id"></span>
+                        <p>
+                        </p>
+                        <p>
+                            <label>Path</label>:
+                            <span data-bind="text: path"></span>
+                        </p>
+                        <p>
+                            <label>Name</label>:
+                            <span data-bind="text: name"></span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div data-bind="visible: $root.chosenOperation() === 'ChosenDocument'">
+                <div class="viewUser" data-bind="with: chosenDocumentData">
+                    <div class="row" style="margin-top: 10px">
+                        <div class="col-md-12">
+                            <h1>
+                                <span class="pull-left">
+                                    <div class="btn btn-primary" style="width: 200px"
+                                         data-bind="click: $root.downloadDocument">
+                                        <span class="glyphicon glyphicon-download"></span> Download
+                                    </div>
+                                </span>
+                                <span class="pull-right">
+                                    <div class="btn btn-default" style="width: 100px"
+                                         data-bind="click: $root.choseEditDoc">Edit</div>
+
+                                    <div class="btn btn-danger" style="width: 100px"
+                                        data-bind="click: $root.deleteDocument">Delete</div>
+                                </span>
+                            </h1>
+                        </div>
+                    </div>
+
+                    <!--<p class="message" data-bind="html: messageContent" />-->
+                </div>
+            </div>
+
+
+
+            <!-- Edit the document -->
+
+
+            <div id="editDocBlock" data-bind="visible: $root.chosenOperation() === 'EditDoc'">
+                <div data-bind="with: chosenDocumentData" style="margin-top: 10px">
+                    <div class="form-group">
+                        <label for="editDocName">Name of the document:</label>
+                        <input id="editDocName" class="form-control" placeholder="none">
+                        <!--data-bind="attr:{placeholder:name}"-->
+                    </div>
+                    <div class="form-group">
+                        <label for="editDocExtension">Extension:</label>
+                        <input id="editDocExtension" class="form-control" placeholder="none">
+                        <!--data-bind="attr:{placeholder:name}"-->
+                    </div>
+                    <div class="form-group">
+                        <label for="editDocPath">Path:</label>
+                        <input id="editDocPath" class="form-control" placeholder="default">
+                    </div>
+
+                    <div class="btn btn-primary" style="width: 200px"
+                         data-bind="click: $root.editDocument">Edit</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script src="../assets/libs/knockout/knockout-3.4.2.js"></script>
+    <script src="../assets/libs/jquery/js/jquery-3.2.1.min.js"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script src="../assets/libs/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../assets/libs/bootstrap/js/bootstrap-filestyle.min.js"> </script>
+    <script type="text/javascript" src="../assets/libs/filesaver/FileSaver.min.js"> </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/a5734b29083/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script src="https://cdn.datatables.net/responsive/1.0.1/js/dataTables.responsive.js"></script>
+
+    <script src="/pages/util/js/admin.js"></script>
+</body>
+</html>
